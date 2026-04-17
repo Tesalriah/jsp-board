@@ -11,15 +11,13 @@ import java.io.IOException;
 public class wiseSayingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8"); // 들어오는 데이터를 UTF-8로 인코딩
-        resp.setCharacterEncoding("UTF-8"); // 응답 데이터를 UTF-8로 인코딩
-        resp.setContentType("text/html; charset=UTF-8"); // 브라우저한테 우리가 만든 결과물은 UTF-8로 인코딩된 HTML임을 알려줌
+        Rq rq = new Rq(req, resp);
 
-        String content = req.getParameter("content");
-        String author = req.getParameter("author");
-        resp.getWriter().append("<h1>명언</h1>");
+        String content = rq.getParam("content", "");
+        String author = rq.getParam("author", "");
 
-        resp.getWriter().append("<div>명언 : " + content + "</div>");
-        resp.getWriter().append("작가 : " + author);
+        rq.writer("<h1>명언</h1>" +
+                "<div>명언 :" + content +"</div>" +
+                "작가 : " + author);
     }
 }
