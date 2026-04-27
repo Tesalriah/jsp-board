@@ -1,8 +1,10 @@
 package com.jnh.board.servlet.boundContext.article.service;
 
-import com.jnh.board.servlet.boundContext.article.dto.Article;
+import com.jnh.board.servlet.boundContext.article.dto.ArticleDto;
+import com.jnh.board.servlet.boundContext.article.entity.Article;
 import com.jnh.board.servlet.boundContext.article.repository.ArticleRepository;
 import com.jnh.board.servlet.boundContext.base.Container;
+import com.jnh.board.servlet.boundContext.member.dto.Member;
 
 import java.util.List;
 
@@ -17,8 +19,16 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public long write(String title, String content) {
-        return articleRepository.save(title, content);
+    public long write(String title, String content, Member member) {
+        return articleRepository.save(title, content, member);
+    }
+
+    public List<ArticleDto> joinMenmberFindAll(){
+        return articleRepository.joinMemberFindAll();
+    }
+
+    public ArticleDto joinMemberFindById(long id){
+        return articleRepository.joinMemberFindById(id);
     }
 
     public Article findById(long id) {

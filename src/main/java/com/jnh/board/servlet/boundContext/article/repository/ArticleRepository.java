@@ -1,14 +1,14 @@
 package com.jnh.board.servlet.boundContext.article.repository;
 
 import com.jnh.board.db.DBConnection;
-import com.jnh.board.servlet.boundContext.article.dto.Article;
+import com.jnh.board.servlet.boundContext.article.dto.ArticleDto;
+import com.jnh.board.servlet.boundContext.article.entity.Article;
 import com.jnh.board.servlet.boundContext.base.Container;
+import com.jnh.board.servlet.boundContext.member.dto.Member;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.LongStream;
 
 public class ArticleRepository {
     private List<Article> articleList;
@@ -31,12 +31,43 @@ public class ArticleRepository {
         return articleList;
     }
 
-    public long save(String title, String content) {
+    public List<ArticleDto> joinMemberFindAll() {
+        List<ArticleDto> articleList = new ArrayList<>();
+        List<Map<String,Object>> rows = dbConnection.selectRows("""
+                SELECT A.id, A.title, A.content, M.username, A.regDate
+                FROM `article` as A
+                INNER JOIN `member` AS M
+                ON A.member_id = M.id
+                ORDER BY A.id DESC
+                """);
+        for(Map<String,Object> row : rows){
+            articleList.add(new ArticleDto(row));
+        }
+
+        return articleList;
+    }
+
+    public ArticleDto joinMemberFindById(long id) {
+        Map<String, Object> row = dbConnection.selectRow("""
+                SELECT A.id, A.title, A.content, M.username, A.regDate 
+                FROM `article` as A
+                INNER JOIN `member` AS M
+                ON A.member_id = M.id
+                WHERE A.id = %d
+                """.formatted(id));
+
+        return new ArticleDto(row);
+        }
+
+    public long save(String title, String content, Member member) {
+
         int id = dbConnection.insert("""
                 insert into article
                 set title = '%s',
-                content = '%s'
-                """.formatted(title, content)
+                content = '%s',
+                member_id = %d,
+                regDate = now()
+                """.formatted(title, content, member.getId())
         );
 
         return id;

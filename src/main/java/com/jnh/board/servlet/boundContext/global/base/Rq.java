@@ -1,5 +1,6 @@
 package com.jnh.board.servlet.boundContext.global.base;
 
+import com.jnh.board.servlet.boundContext.member.dto.Member;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -148,8 +149,8 @@ public class Rq {
         session.setAttribute(attrName, value);
     }
 
-    public void getSessionAttr(String attrName) {
-        session.getAttribute(attrName);
+    public Member getSessionAttr(String attrName) {
+        return (Member)session.getAttribute(attrName);
     }
 
     public void removeSessionAttr(String loggedInMember) {
@@ -174,5 +175,9 @@ public class Rq {
 
     public boolean isLogout() {
         return !isLogined();
+    }
+
+    public Member getLoggedInMemer() {
+        return getSessionAttr(sessionAttrName);
     }
 }
